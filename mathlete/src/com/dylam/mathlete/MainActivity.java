@@ -43,7 +43,8 @@ public class MainActivity extends Activity {
 		number2 = (TextView)findViewById(R.id.number_2);
 		
 		currentCountdownTime = 0;
-		// Set up key listeners.
+		
+		// Set up input key listener.
 		user_input = (EditText)findViewById(R.id.user_answer);
 		user_input.setOnEditorActionListener(new OnEditorActionListener() {
 
