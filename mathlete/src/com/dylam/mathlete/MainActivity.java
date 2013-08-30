@@ -9,9 +9,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -39,21 +41,22 @@ public class MainActivity extends Activity {
 		
 		// Set up key listeners.
 		user_input = (EditText)findViewById(R.id.user_answer);
-		user_input.setOnKeyListener(new OnKeyListener() {
+		user_input.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (event.getAction() == KeyEvent.ACTION_DOWN) {
-					switch(keyCode) {
-					case KeyEvent.KEYCODE_ENTER:	
-						on_submit(null);
-						return true;
-					}
-					
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				boolean handled = false;
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					on_submit(null);
+					handled = true;
 				}
 				
-				return false;
-			}} );
+				return handled;
+			}
+			
+		
+		});
+		
 		generateNumbers();
 		
 		mProgressBar = (ProgressBar)findViewById(R.id.progressBar1);
