@@ -20,15 +20,18 @@ public class MainActivity extends Activity {
 	int min = 0;
 	int max = 100;
 	int correct_count = 0;
-	String TAG = "MentalMath";
+	String TAG = "mathlete";
 	int a;
 	int b;
 	TextView number1;
 	TextView number2;
 	Random r;
 	EditText user_input;
-	ProgressBar mProgressBar; 
-	
+	ProgressBar mCountdownBar; 
+	int maxCountdownTime = 5;  // in seconds?
+	int currentCountdownTime = maxCountdownTime;
+	final int mCountdownBarMax = 100;
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +42,7 @@ public class MainActivity extends Activity {
 		number1 = (TextView)findViewById(R.id.number_1);
 		number2 = (TextView)findViewById(R.id.number_2);
 		
+		currentCountdownTime = 0;
 		// Set up key listeners.
 		user_input = (EditText)findViewById(R.id.user_answer);
 		user_input.setOnEditorActionListener(new OnEditorActionListener() {
@@ -53,15 +57,23 @@ public class MainActivity extends Activity {
 				
 				return handled;
 			}
-			
-		
 		});
-		
+
+		mCountdownBar = (ProgressBar)findViewById(R.id.countdownBar);
+		mCountdownBar.setMax(mCountdownBarMax);
+		currentCountdownTime = maxCountdownTime;
+
 		generateNumbers();
-		
-		mProgressBar = (ProgressBar)findViewById(R.id.progressBar1);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		// Update the countdown bar.
+		
+	
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -75,6 +87,16 @@ public class MainActivity extends Activity {
 		
 		number1.setText(Integer.toString(a));
 		number2.setText(Integer.toString(b));
+		
+		// Reset countdown bar.
+		if (currentCountdownTime <= 0) {
+			currentCountdownTime = maxCountdownTime;
+		} else {
+			currentCountdownTime -= 1;
+		}
+
+		//mCountdownBar.setProgress((currentCountdownTime/maxCountdownTime) * mCountdownBarMax);
+		mCountdownBar.setProgress(50);
 	}
 	
 	public void on_submit(View v) {
