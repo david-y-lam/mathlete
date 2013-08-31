@@ -4,11 +4,11 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -31,7 +31,9 @@ public class MainActivity extends Activity {
 	int maxCountdownTime = 5;  // in seconds?
 	int currentCountdownTime = maxCountdownTime;
 	final int mCountdownBarMax = 100;
-		
+	final int maxTimeInMillis = maxCountdownTime * 1000;
+	CountDownTimer timer;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,7 +63,8 @@ public class MainActivity extends Activity {
 		});
 
 		mCountdownBar = (ProgressBar)findViewById(R.id.countdownBar);
-		mCountdownBar.setMax(mCountdownBarMax);
+		mCountdownBar.setMax(maxTimeInMillis);
+		mCountdownBar.setProgress(maxTimeInMillis/2); 
 		currentCountdownTime = maxCountdownTime;
 
 		generateNumbers();
@@ -70,10 +73,6 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		// Update the countdown bar.
-		
-	
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,15 +88,12 @@ public class MainActivity extends Activity {
 		number1.setText(Integer.toString(a));
 		number2.setText(Integer.toString(b));
 		
-		// Reset countdown bar.
-		if (currentCountdownTime <= 0) {
-			currentCountdownTime = maxCountdownTime;
-		} else {
-			currentCountdownTime -= 1;
+		// Start a new timer
+		if (timer != null) {
+			timer.cancel();
 		}
-
-		//mCountdownBar.setProgress((currentCountdownTime/maxCountdownTime) * mCountdownBarMax);
-		mCountdownBar.setProgress(50);
+		
+		startCountdown();
 	}
 	
 	public void on_submit(View v) {
@@ -120,5 +116,21 @@ public class MainActivity extends Activity {
 		user_input.setText("");
 	}
 
+	private void startCountdown() {
+		timer = new CountDownTimer(maxTimeInMillis, 1000) {
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				mCountdownBar.setProgress(0);
+			}
+
+			@Override
+			public void onTick(long millisUntilFinished) {
+				// Update countdown bar.
+				mCountdownBar.setProgress((int) millisUntilFinished);
+			}
+		}.start();
+	}
 
 }
