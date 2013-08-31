@@ -98,8 +98,14 @@ public class MainActivity extends Activity {
 	
 	public void on_submit(View v) {
 		// Get input from user
-		int answer = Integer.parseInt(((EditText) findViewById(R.id.user_answer)).getText().toString());
-		Log.d(TAG, "User entered: " + Integer.toString(answer));
+		String input= ((EditText) findViewById(R.id.user_answer)).getText().toString();
+		int answer = 0;
+		
+		if (input.length() == 0) {
+			return;
+		} else {
+			answer = Integer.parseInt(input);
+		}
 		
 		// Check results
 		String result = "";
