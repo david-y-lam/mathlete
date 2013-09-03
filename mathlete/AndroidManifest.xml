@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="17" />
 
     <application
@@ -25,6 +25,14 @@
         <activity
             android:name="com.dylam.mathlete.Chapter1_TwoDigitAddition"
             android:label="@string/app_name" >
+        </activity>
+        <activity 
+            android:name="com.dylam.mathlete.SettingsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.dylam.mathlete.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dylam.mathlete.MainActivity"/>
         </activity>
     </application>
 

@@ -9,4 +9,25 @@
     <string name="dialog_about_body">Blah blah blah to fill in later</string>
     <string name="dialog_about_title">About Mathlete</string>
 
+    <string name="pref_difficulty_title">Difficulty level</string>
+    <string name="pref_difficulty_summary">Set level of difficulty</string>
+    <string name="pref_difficulty_default">Easy</string>
+    <string-array name="pref_difficulty_entries">
+        <item>Easy</item>
+        <item>Average</item>
+        <item>Hard</item>
+    </string-array>
+    <string-array name="pref_difficulty_values">
+        <item>Easy</item>
+        <item>Average</item>
+        <item>Hard</item>
+    </string-array>    
+    
+    <string name="pref_collect_stats_title">Log stats?</string>
+    <string name="pref_collect_stats_summary">Record statistics to be displayed later.</string>
+    
+    <string name="pref_webpage_title">Mathlete Homepage</string>
+    <string name="pref_webpage_summary">Check us out online!</string>
+    
+    <string name="homepage_url">http://www.dylam.me</string>
 </resources>

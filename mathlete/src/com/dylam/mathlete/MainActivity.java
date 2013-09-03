@@ -1,5 +1,6 @@
 package com.dylam.mathlete;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,7 +15,6 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
-		
 	}
 	
 	@Override
@@ -31,11 +31,11 @@ public class MainActivity extends FragmentActivity {
 				Toast.makeText(getApplicationContext(), "help", Toast.LENGTH_SHORT).show();
 				return true;
 			case R.id.action_about:
-				DialogFragment aboutFragment = new AboutFragment();
-				aboutFragment.show(getSupportFragmentManager(), "About Fragment");
+				AboutFragment aboutFragment = new AboutFragment();
+				aboutFragment.show(getFragmentManager(), "About Fragment");
 				return true;
 			case R.id.action_settings:
-				Toast.makeText(getApplicationContext(), "settings", Toast.LENGTH_SHORT).show();
+				startActivity(new Intent(this, SettingsActivity.class));
 				return true;
 			default:
 				return false;

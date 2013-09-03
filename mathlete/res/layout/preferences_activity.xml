@@ -4,4 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        class="com.dylam.mathlete.SettingsFragment" />
+
 </LinearLayout>
