@@ -2,25 +2,29 @@ package com.dylam.mathlete;
 
 import java.util.Random;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-abstract public class BaseExerciseActivity extends Activity{
+abstract public class BaseExerciseFragment extends Fragment{
 	// UI elements
 	public TextView mNumber1View, mNumber2View;
 	public ProgressBar mCountdownBar;
 	public EditText mUserInput;
+	public Button mButton;
 	
 	// Timer that drives the progress bar
 	private CountDownTimer mTimer;
@@ -30,48 +34,68 @@ abstract public class BaseExerciseActivity extends Activity{
 	
 	// Backend elements
 	public Random rand;
-	public int num_correct;
-	public int num_total;
-	
+	public int num_correct, num_total;
+	public int num1, num2;
+	public int maxNum, minNum;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.base_exercise_activity);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.base_exercise_activity, container, false);
+
+		// Bind UI elements. In fragments, onCreateView sets up the UI and is
+		// called before onCreate().
+		mCountdownBar = (ProgressBar)v.findViewById(R.id.countdownBar);		
+		mNumber1View = (TextView)v.findViewById(R.id.number_1);
+		mNumber2View = (TextView)v.findViewById(R.id.number_2);
+		mButton = (Button)v.findViewById(R.id.button1);
 		
+		// Set up user input.
+		mUserInput = (EditText)v.findViewById(R.id.user_answer_input);
+		return v;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
 		// Initialize UI elements
 		maxTimeInMillis = maxTimeInSecs * 1000;
-		mCountdownBar = (ProgressBar)findViewById(R.id.countdownBar);
 		mCountdownBar.setMax(maxTimeInMillis);
-		
-		mNumber1View = (TextView)findViewById(R.id.number_1);
-		mNumber2View = (TextView)findViewById(R.id.number_2);
 
-		// Set up user input.
-		mUserInput = (EditText)findViewById(R.id.user_answer_input);
 		mUserInput
 			.setOnEditorActionListener(new OnEditorActionListener(){
-
 				@Override
 				public boolean onEditorAction(TextView v, int actionId,
 						KeyEvent event) {
 					boolean handled = false;
 					
 					if (actionId == EditorInfo.IME_ACTION_DONE) {
-						onSubmit(null);
+						onSubmit();
 						handled = true;
 					}
 					
 					return handled;
 				}
-				
 			});
 
+		mButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				onSubmit();
+			}
+		});
+		
 		// Pop up the input keyboard
 		// TODO: add a listener to switch focus and display
 		// keyboard after focus has shifted and returned?
 		mUserInput.requestFocus();
-		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		
 		
 		// Initialize question generating elements
@@ -81,8 +105,8 @@ abstract public class BaseExerciseActivity extends Activity{
 		generateQuestion();
 		startCountdown();
 	}
-	
-	public void onSubmit(View v) {
+
+	public void onSubmit() {
 		// Get answer from user
 		String input = mUserInput.getText().toString();
 		String result;
@@ -107,7 +131,7 @@ abstract public class BaseExerciseActivity extends Activity{
 		}
 		
 		// Display results.
-		Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
 	}
 	
 	public void startCountdown() {
@@ -126,10 +150,23 @@ abstract public class BaseExerciseActivity extends Activity{
 		}.start();
 	}
 	
-	
 	// Methods for handling questions and answers
-	abstract void generateQuestion();
 	
-	abstract Boolean checkAnswer(String input);
+	// Logic for generating two numbers. maxNum and minNum 
+	// are ranges for numbers to be generated. This method 
+	// can be overridden in subclasses for exercises that don't
+	// fit this model.
+	public void generateQuestion() {
+		// Get two two-digit numbers
+		num1 = rand.nextInt(maxNum - minNum) + minNum;
+		num2 = rand.nextInt(maxNum - minNum) + minNum;
+		
+		// Set the display
+		mNumber1View.setText(Integer.toString(num1));
+		mNumber2View.setText(Integer.toString(num2));
+	}
+	
+	// Logic for checking answer goes here.
+	abstract Boolean checkAnswer(String input);	
 		
 }

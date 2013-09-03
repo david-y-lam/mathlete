@@ -11,10 +11,19 @@ import android.widget.Toast;
 
 
 public class MainActivity extends FragmentActivity {
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
+		
+		// Add the fragment.
+		getFragmentManager().beginTransaction()
+			.add(R.id.content, new Chapter1_1_TwoDigitAddition(), "1.1")
+			.commit();
+			
+		
+		
 	}
 	
 	@Override
@@ -28,6 +37,7 @@ public class MainActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 			case R.id.action_help:
+				// TODO: implement help for specific exercises.
 				Toast.makeText(getApplicationContext(), "help", Toast.LENGTH_SHORT).show();
 				return true;
 			case R.id.action_about:
@@ -41,7 +51,4 @@ public class MainActivity extends FragmentActivity {
 				return false;
 		}
 	}
-	
-
-	
 }
