@@ -95,13 +95,11 @@ abstract public class BaseExerciseActivity extends Activity{
 			if (mTimer != null) {
 				mTimer.cancel();
 			}
-
 			
 			mUserInput.setText("");
 			
 			generateQuestion();
 			result = "Correct!";
-			
 			
 			startCountdown();
 		} else {

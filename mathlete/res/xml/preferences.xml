@@ -14,6 +14,10 @@
 	    android:summary="@string/pref_collect_stats_summary"
 	    android:defaultValue="true"/>
 	<PreferenceScreen
+	    android:title="@string/pref_reset_stats_title"
+	    android:summary="@string/pref_reset_stats_summary">
+	</PreferenceScreen>
+	<PreferenceScreen
 	    android:title="@string/pref_webpage_title"
 	    android:summary="@string/pref_webpage_summary">
 	    	<intent

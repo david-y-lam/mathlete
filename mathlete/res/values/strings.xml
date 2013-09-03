@@ -9,6 +9,7 @@
     <string name="dialog_about_body">Blah blah blah to fill in later</string>
     <string name="dialog_about_title">About Mathlete</string>
 
+    <string name="pref_difficulty">pref_difficulty</string>
     <string name="pref_difficulty_title">Difficulty level</string>
     <string name="pref_difficulty_summary">Set level of difficulty</string>
     <string name="pref_difficulty_default">Easy</string>
@@ -23,8 +24,14 @@
         <item>Hard</item>
     </string-array>    
     
+    <string name="pref_college_stats">pref_collect_stats</string>
     <string name="pref_collect_stats_title">Log stats?</string>
     <string name="pref_collect_stats_summary">Record statistics to be displayed later.</string>
+    <string name="pref_reset_stats_title">Reset stats?</string>
+    <string name="pref_reset_stats_summary">Clear all stored exercise stats.</string>
+    <string name="pref_reset_stats_dialog_message">You will erase all saved data! Are you sure?</string>    
+    <string name="pref_reset_stats_positive_button_msg">Erase</string>    
+    <string name="pref_reset_stats_negative_button_msg">Cancel</string>    
     
     <string name="pref_webpage_title">Mathlete Homepage</string>
     <string name="pref_webpage_summary">Check us out online!</string>
