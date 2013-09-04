@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -27,10 +28,7 @@ public class SettingsFragment extends PreferenceFragment {
 				.setNegativeButton(R.string.pref_reset_stats_negative_button_msg, null)
 				.show();
 		}
-		
-		
+
 		return super.onPreferenceTreeClick(preferenceScreen, preference);
 	}
-	
-	
 }

@@ -1,9 +1,11 @@
 package com.dylam.mathlete;
 
+import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,19 +13,23 @@ import android.widget.Toast;
 
 
 public class MainActivity extends FragmentActivity {
-
+	public FragmentManager mFragManager;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 		
 		// Add the fragment.
-		getFragmentManager().beginTransaction()
-			.add(R.id.content, new Chapter1_1_TwoDigitAddition(), "1.1")
+		mFragManager = getFragmentManager();
+
+		// NOTE: clicking back button takes us to empty framelayout.
+		// How do I implement exiting the activity/app if there is no
+		// else?
+		mFragManager.beginTransaction()
+			.replace(R.id.content, new Chapter1_1_TwoDigitAddition(), "1.1")
+			.addToBackStack("Exercise")
 			.commit();
-			
-		
-		
 	}
 	
 	@Override
@@ -45,10 +51,28 @@ public class MainActivity extends FragmentActivity {
 				aboutFragment.show(getFragmentManager(), "About Fragment");
 				return true;
 			case R.id.action_settings:
+				/*mFragManager.beginTransaction()
+					.replace(R.id.content, new SettingsFragment(), "Settings Fragment")
+					.addToBackStack("Settings")
+					.commit();
+				
+				for(int entry = 0; entry < mFragManager.getBackStackEntryCount(); entry++){
+					   Log.i("MainActivity:onOptionsItemSelected", "Found fragment: " + mFragManager.getBackStackEntryAt(entry).getName());
+				}*/
 				startActivity(new Intent(this, SettingsActivity.class));
 				return true;
 			default:
 				return false;
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// Should this be 1 or 0? 
+		if (mFragManager.getBackStackEntryCount() > 1) {
+			mFragManager.popBackStackImmediate();
+		} else {
+			super.onBackPressed();
 		}
 	}
 }
