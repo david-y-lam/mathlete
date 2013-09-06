@@ -10,8 +10,7 @@ public class Chapter1_1_TwoDigitAddition extends BaseExerciseFragment {
 		maxNum = 100;
 		minNum = 10;
 		
-		maxTimeInSecs = 5;
-		countDownInterval = 1000;
+		maxTimeInSecs = 10;
 		super.onCreate(savedInstanceState);
 	}
 

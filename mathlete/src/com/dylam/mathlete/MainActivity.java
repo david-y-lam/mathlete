@@ -1,6 +1,5 @@
 package com.dylam.mathlete;
 
-import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,21 +13,30 @@ import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
 	public FragmentManager mFragManager;
+	public String TAG = "MainActivity";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate()");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 		
-		// Add the fragment.
+		if (savedInstanceState != null) { 
+			for (String key: savedInstanceState.keySet()) 
+				Log.d(TAG, "bundle key:" + key);
+			
+			return;
+			
+		}
 		mFragManager = getFragmentManager();
-
+		
+		Log.d(TAG, "adding exercise for the first time");
 		// NOTE: clicking back button takes us to empty framelayout.
 		// How do I implement exiting the activity/app if there is no
 		// else?
 		mFragManager.beginTransaction()
 			.replace(R.id.content, new Chapter1_1_TwoDigitAddition(), "1.1")
-			.addToBackStack("Exercise")
+			//.addToBackStack("Exercise")
 			.commit();
 	}
 	
@@ -75,4 +83,49 @@ public class MainActivity extends FragmentActivity {
 			super.onBackPressed();
 		}
 	}
+
+	@Override
+	protected void onDestroy() {
+		Log.d(TAG, "onDestroy()");
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onPause() {
+		Log.d(TAG, "onPause()");
+		// TODO Auto-generated method stub
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		Log.d(TAG, "onResume()");
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
+
+	@Override
+	protected void onStart() {
+		Log.d(TAG, "onStart()");
+		// TODO Auto-generated method stub
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		Log.d(TAG, "onStop()");		
+		// TODO Auto-generated method stub
+		super.onStop();
+	}
+
+	@Override
+	protected void onRestart() {
+		Log.d(TAG, "onRestart()");		
+		// TODO Auto-generated method stub
+		super.onRestart();
+	}
+	
+	
+	
 }
