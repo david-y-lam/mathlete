@@ -1,6 +1,5 @@
 package com.dylam.mathlete;
 
-import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,21 +13,28 @@ import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
 	public FragmentManager mFragManager;
+	public String TAG = "MainActivity";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate()");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
+
 		
-		// Add the fragment.
 		mFragManager = getFragmentManager();
+		
+		// If we're restoring state, then we don't need to 
+		// do anything else.
+		if (savedInstanceState != null) { 
+			return;
+		}
 
 		// NOTE: clicking back button takes us to empty framelayout.
 		// How do I implement exiting the activity/app if there is no
 		// else?
 		mFragManager.beginTransaction()
 			.replace(R.id.content, new Chapter1_1_TwoDigitAddition(), "1.1")
-			.addToBackStack("Exercise")
 			.commit();
 	}
 	
