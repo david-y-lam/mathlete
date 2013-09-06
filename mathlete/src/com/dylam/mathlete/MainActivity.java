@@ -20,16 +20,18 @@ public class MainActivity extends FragmentActivity {
 		Log.d(TAG, "onCreate()");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
+
+		mFragManager = getFragmentManager();
 		
 		if (savedInstanceState != null) { 
 			for (String key: savedInstanceState.keySet()) 
 				Log.d(TAG, "bundle key:" + key);
 			
+			Log.d(TAG, "onCreate, frag manager" + mFragManager.toString());
 			return;
 			
 		}
-		mFragManager = getFragmentManager();
-		
+
 		Log.d(TAG, "adding exercise for the first time");
 		// NOTE: clicking back button takes us to empty framelayout.
 		// How do I implement exiting the activity/app if there is no
@@ -125,7 +127,4 @@ public class MainActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onRestart();
 	}
-	
-	
-	
 }
