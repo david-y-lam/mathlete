@@ -92,7 +92,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 		 	
 		 	showProblem(problem, mWebView);
 		} else {
-			generateAndDisplayQuestion(mWebView);
+			generateQuestion(mWebView);
 			startCountdown(maxTimeInSecs);
 		}
 		
@@ -143,7 +143,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 			
 			mUserInput.setText("");
 			
-			generateAndDisplayQuestion(mWebView);
+			generateQuestion(mWebView);
 			result = "Correct!";
 			
 			startCountdown(maxTimeInSecs);

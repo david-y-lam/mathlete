@@ -34,7 +34,8 @@ public class MainActivity extends FragmentActivity {
 		// How do I implement exiting the activity/app if there is no
 		// else?
 		mFragManager.beginTransaction()
-			.replace(R.id.content, new Chapter1_1_TwoDigitAddition(), "1.1")
+			.replace(R.id.content, new ExerciseListFragment(), "ExerciseListFragment()")
+			.addToBackStack("ExerciseListFragment")
 			.commit();
 	}
 	
