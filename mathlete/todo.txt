@@ -11,15 +11,15 @@ Three digit subtraction
 Chapter 2 - Basic multiplication
 2x1 multiplication
 3x1 mulitplication
-2 digit squares
+*2 digit squares
 
 Chapter 3 - intermediate multiplication
 2-by-2 addition-method multiplication problems
 2-by-2 subtraction-method multiplication problems
 2-by-2 factoring-method multiplication problems
 2-by-2 general multiplication
-three-digit squares
-2-digit cubes
+*three-digit squares
+*2-digit cubes
 
 Chapter 4 - mental division
 one-digit division
@@ -28,7 +28,7 @@ decimalization - unary!
 testing for divisibility - True or false.
 multipliying fractions
 dividing fractions
-!simplifying fractions - unary! find equivalent fraction with different base
+*simplifying fractions - unary! find equivalent fraction with different base
 adding fractions (equivalent denominators)
 adding fractions (unequal denominators)
 subtracting fractions
@@ -38,27 +38,27 @@ addition guesstimation - must round numbers.
 subtraction guesstimation - must round numbers.
 division guesstimation - must "adjust numbers"
 mulptilication guestimation - must adjust numbers
-square root guesstimation - unary!
-everyday math - word problems!
+*square root guesstimation - unary!
+*everyday math - word problems!
 
 Chapter 6 - pencil-and-paper math
-columns of numbers - gotta sum a column of numbers. one version has dollars and cents.
+*columns of numbers - gotta sum a column of numbers. one version has dollars and cents.
 subtracting on paper
-square root guesstimation - unary
+*square root guesstimation - unary
 pencil and paper multiplication - requires...pencil and paper.
 
 Chapter 7 - memorizing numbers
 bunch of mnemonics for memorizing numbers; maybe skip?
 
 Chapter 8 - advanced multiplication
-four-digit squares
+*four-digit squares
 3-by-2 exercises using factoring, addition, and subtraction methods.
 five-digit squares
 3-by-3 multiplication
 5-by-5 multiplication
 
 Chapter 9 - pyschic math
-get day of week from date.
+*get day of week from date.
 
 Layout 
 

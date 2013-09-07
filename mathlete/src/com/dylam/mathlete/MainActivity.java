@@ -57,14 +57,6 @@ public class MainActivity extends FragmentActivity {
 				aboutFragment.show(getFragmentManager(), "About Fragment");
 				return true;
 			case R.id.action_settings:
-				/*mFragManager.beginTransaction()
-					.replace(R.id.content, new SettingsFragment(), "Settings Fragment")
-					.addToBackStack("Settings")
-					.commit();
-				
-				for(int entry = 0; entry < mFragManager.getBackStackEntryCount(); entry++){
-					   Log.i("MainActivity:onOptionsItemSelected", "Found fragment: " + mFragManager.getBackStackEntryAt(entry).getName());
-				}*/
 				startActivity(new Intent(this, SettingsActivity.class));
 				return true;
 			default:

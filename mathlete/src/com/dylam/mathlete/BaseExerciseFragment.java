@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 
 abstract public class BaseExerciseFragment extends Fragment{
 	// UI elements
-	public TextView mNumber1View, mNumber2View;
+	public WebView mWebView;
 	public ProgressBar mCountdownBar;
 	public EditText mUserInput;
 	public Button mButton;
@@ -31,10 +32,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 	public int maxTimeInSecs;
 	
 	// Backend elements
-	public Random rand;
 	public int num_correct, num_total;
-	public int num1, num2;
-	public int maxNum, minNum;
 	public int timeRemainingInSecs;
 	
 	public String TAG = "BaseExerciseFragment";
@@ -49,13 +47,13 @@ abstract public class BaseExerciseFragment extends Fragment{
 		
 		// Bind UI elements. In fragments, onCreateView sets up the UI and is
 		// called before onCreate().
+		mWebView = (WebView)v.findViewById(R.id.webView1);
 		mCountdownBar = (ProgressBar)v.findViewById(R.id.countdownBar);		
-		mNumber1View = (TextView)v.findViewById(R.id.number_1);
-		mNumber2View = (TextView)v.findViewById(R.id.number_2);
 		mButton = (Button)v.findViewById(R.id.button1);
 		mUserInput = (EditText)v.findViewById(R.id.user_answer_input);
 		mCountdownBar.setMax(maxTimeInSecs * 1000);
 
+		mWebView.getSettings().setJavaScriptEnabled(true);
 		mUserInput
 			.setOnEditorActionListener(new OnEditorActionListener(){
 				@Override
@@ -86,15 +84,15 @@ abstract public class BaseExerciseFragment extends Fragment{
 		//getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 		
-		// Restore old state if applicable
+		//Restore old state if applicable
 		if (savedInstanceState != null) {
-			num1 = savedInstanceState.getInt("num1");
-			num2 = savedInstanceState.getInt("num2");
+			problem = savedInstanceState.getString("problem");
 			timeRemainingInSecs = savedInstanceState.getInt("timeRemaining");
-			mNumber1View.setText(Integer.toString(num1));
-			mNumber2View.setText(Integer.toString(num2));
+		 	solution = savedInstanceState.getString("solution");
+		 	
+		 	showProblem(problem, mWebView);
 		} else {
-			generateQuestion();
+			generateAndDisplayQuestion(mWebView);
 			startCountdown(maxTimeInSecs);
 		}
 		
@@ -123,11 +121,10 @@ abstract public class BaseExerciseFragment extends Fragment{
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
-		// Question, answer, current time, stats
-		outState.putInt("num1", num1);
-		outState.putInt("num2", num2);
-		outState.putString("answer", mUserInput.getText().toString());
+		//Question, answer, current time, stats
+		outState.putString("problem", problem);
 		outState.putInt("timeRemaining", timeRemainingInSecs);
+		outState.putString("solution", solution);
 	}
 
 	public void onSubmit() {
@@ -146,7 +143,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 			
 			mUserInput.setText("");
 			
-			generateQuestion();
+			generateAndDisplayQuestion(mWebView);
 			result = "Correct!";
 			
 			startCountdown(maxTimeInSecs);
@@ -180,23 +177,26 @@ abstract public class BaseExerciseFragment extends Fragment{
 		}.start();
 	}
 	
-	// Methods for handling questions and answers
+
+	//Logic for generating exercises. Should this be a nested class?
+	public String title, hint, problem, inputType, solution;
+	public Random rand;
+	public int max, min;
+	public static String open_html = 
+			"<!DOCTYPE html><html lang=\"en\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\"><head><meta charset=\"utf-8\"><link rel=\"stylesheet\" href=\"file:///android_asset/jqmath-0.4.0.css\"><script src=\"file:///android_asset/jquery-1.4.3.min.js\"></script><script src=\"file:///android_asset/jqmath-etc-0.4.0.min.js\"></script></head><html>";
+	public static String close_html = "</html>";
 	
-	// Logic for generating two numbers. maxNum and minNum 
-	// are ranges for numbers to be generated. This method 
-	// can be overridden in subclasses for exercises that don't
-	// fit this model.
-	public void generateQuestion() {
-		// Get two two-digit numbers
-		num1 = rand.nextInt(maxNum - minNum) + minNum;
-		num2 = rand.nextInt(maxNum - minNum) + minNum;
-		
-		// Set the display
-		mNumber1View.setText(Integer.toString(num1));
-		mNumber2View.setText(Integer.toString(num2));
+	public void generateQuestion(WebView w) {
+		showProblem(problem, w);
 	}
 	
-	// Logic for checking answer goes here.
-	abstract Boolean checkAnswer(String input);	
-		
+	public boolean checkAnswer(String userAnswer) {
+		return solution.equals(userAnswer);
+	}
+	
+	public void showProblem(String problem, WebView w) {
+		String html = new StringBuilder().append(open_html).append(problem).append(close_html).toString();
+
+		w.loadDataWithBaseURL("file:///android_asset", html, "text/html", "utf-8", "");
+	}
 }

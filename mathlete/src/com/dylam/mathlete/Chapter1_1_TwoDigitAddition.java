@@ -1,23 +1,38 @@
 package com.dylam.mathlete;
 
+import java.util.Random;
+
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.WebView;
 
 public class Chapter1_1_TwoDigitAddition extends BaseExerciseFragment {
-
+	// variables
+	public int num1, num2;
+	public int max, min;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		maxNum = 100;
-		minNum = 10;
-		
+		title = "Two-digit addition";
+		hint = "Add these two numbers together.";
+		rand = new Random();
+		max = 100;
+		min = 10;
 		maxTimeInSecs = 10;
+
 		super.onCreate(savedInstanceState);
 	}
 
-	@Override
-	Boolean checkAnswer(String input) {
-		int answer = Integer.parseInt(input);
+	public void generateQuestion(WebView w) {
+		// Generate our two numbers
+		num1 = rand.nextInt(max - min) + min;
+		num2 = rand.nextInt(max - min) + min;
 		
-		return num1 + num2 == answer;
+		// Now display it on the WebView
+		problem = "$$" + Integer.toString(num1) + " + " + Integer.toString(num2) + "$$";
+		
+		// Save solution.
+		solution = Integer.toString(num1 + num2);
+		
+		super.generateQuestion(w);
 	}
 }
