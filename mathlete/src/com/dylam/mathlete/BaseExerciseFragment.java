@@ -3,9 +3,10 @@ package com.dylam.mathlete;
 import java.util.Random;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
+import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +21,14 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+
 abstract public class BaseExerciseFragment extends Fragment{
 	// UI elements
 	public WebView mWebView;
 	public ProgressBar mCountdownBar;
 	public EditText mUserInput;
 	public Button mButton;
+	public Vibrator mVibrator;
 	
 	// Timer that drives the progress bar
 	private CountDownTimer mTimer;
@@ -83,6 +86,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 		//mUserInput.requestFocus();
 		//getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
+		mVibrator = (Vibrator)Config.context.getSystemService(Context.VIBRATOR_SERVICE);
 		
 		//Restore old state if applicable
 		if (savedInstanceState != null) {
@@ -167,6 +171,9 @@ abstract public class BaseExerciseFragment extends Fragment{
 			public void onFinish() {
 				timeRemainingInSecs = 0;
 				mCountdownBar.setProgress(0);
+				if (mVibrator.hasVibrator()) {
+					mVibrator.vibrate(100);
+				}
 			}
 
 			@Override

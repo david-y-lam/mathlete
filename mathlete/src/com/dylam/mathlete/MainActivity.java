@@ -21,7 +21,7 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 
-		
+		Config.context = this;
 		mFragManager = getFragmentManager();
 		
 		// If we're restoring state, then we don't need to 
