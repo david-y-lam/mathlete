@@ -3,10 +3,14 @@ package com.dylam.mathlete;
 import java.util.Random;
 
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.text.format.Time;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+
+import com.dylam.mathlete.UserAnswerContract.UserAnswer;
 
 
 abstract public class BaseExerciseFragment extends Fragment{
@@ -37,6 +43,10 @@ abstract public class BaseExerciseFragment extends Fragment{
 	// Backend elements
 	public int num_correct, num_total;
 	public int timeRemainingInSecs;
+	
+	// Database elements
+	public SQLiteDatabase mDb;
+	public Time sessionStartDatetime, problemStartDatetime, submissionDatetime;
 	
 	public String TAG = "BaseExerciseFragment";
 	
@@ -87,6 +97,13 @@ abstract public class BaseExerciseFragment extends Fragment{
 		//getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 		mVibrator = (Vibrator)Config.context.getSystemService(Context.VIBRATOR_SERVICE);
+		
+		// Database elements
+		mDb = Config.dbHelper.getWritableDatabase();
+		sessionStartDatetime = new Time();
+		sessionStartDatetime.setToNow();
+		submissionDatetime = new Time();
+		problemStartDatetime = new Time();
 		
 		//Restore old state if applicable
 		if (savedInstanceState != null) {
@@ -139,14 +156,14 @@ abstract public class BaseExerciseFragment extends Fragment{
 			return;
 		}
 		
+		submissionDatetime.setToNow();
+		
 		// Check answer.
 		if (checkAnswer(input)) {
 			if (mTimer != null) {
 				mTimer.cancel();
 			}
-			
-			mUserInput.setText("");
-			
+
 			generateQuestion(mWebView);
 			result = "Correct!";
 			
@@ -154,6 +171,22 @@ abstract public class BaseExerciseFragment extends Fragment{
 		} else {
 			result = "Incorrect!";
 		}
+		
+		mUserInput.setText("");
+		
+		// Insert into Database
+		ContentValues values = new ContentValues();
+		values.put(UserAnswer.COLUMN_NAME_SESSION_DATETIME, sessionStartDatetime.toString());
+		//values.put(UserAnswer.COLUMN_NAME_LEVEL, null);
+		values.put(UserAnswer.COLUMN_NAME_EXERCISE, title);
+		values.put(UserAnswer.COLUMN_NAME_PROBLEM, problem);
+		values.put(UserAnswer.COLUMN_NAME_SOLUTION,solution);
+		values.put(UserAnswer.COLUMN_NAME_PROBLEM_START_DATETIME, problemStartDatetime.toString());
+		values.put(UserAnswer.COLUMN_NAME_SUBMISSION_START_DATETIME, submissionDatetime.toString());
+		values.put(UserAnswer.COLUMN_NAME_CORRECT, result);
+		
+		long rowId = mDb.insert(UserAnswer.TABLE_NAME, null, values);
+		Log.d(TAG, "DB insert into row:" + Long.toString(rowId));
 		
 		// Display results.
 		Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
@@ -195,6 +228,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 	
 	public void generateQuestion(WebView w) {
 		showProblem(problem, w);
+		problemStartDatetime.setToNow();
 	}
 	
 	public boolean checkAnswer(String userAnswer) {

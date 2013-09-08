@@ -1,5 +1,7 @@
 package com.dylam.mathlete;
 
+import com.dylam.mathlete.UserAnswerContract.UserAnswer;
+
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +24,8 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.main_activity);
 
 		Config.context = this;
+		Config.dbHelper = new UserAnswersLogDbHelper(Config.context);
+
 		mFragManager = getFragmentManager();
 		
 		// If we're restoring state, then we don't need to 
