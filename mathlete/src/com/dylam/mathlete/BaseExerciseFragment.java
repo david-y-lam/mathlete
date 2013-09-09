@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -157,7 +158,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 		}
 		
 		submissionDatetime.setToNow();
-		
+
 		// Check answer.
 		if (checkAnswer(input)) {
 			if (mTimer != null) {
@@ -186,7 +187,6 @@ abstract public class BaseExerciseFragment extends Fragment{
 		values.put(UserAnswer.COLUMN_NAME_CORRECT, result);
 		
 		long rowId = mDb.insert(UserAnswer.TABLE_NAME, null, values);
-		Log.d(TAG, "DB insert into row:" + Long.toString(rowId));
 		
 		// Display results.
 		Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();

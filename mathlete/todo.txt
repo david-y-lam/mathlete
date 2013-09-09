@@ -75,6 +75,14 @@ Other
 1) Generating random numbers
 2) Creating countdown timer/bar.
 3) Database for storing status of exercises (Which one's completed).
-4) How should I organize the exercises (i.e. OOP/Class design).
+3a) Content provider/moving db operations to separate thread
+4) Graphing/visualizations
+5) How should I organize the exercises (i.e. OOP/Class design).
+6) Facebook/social networking sharing of progress
+7) Implement splash/tutorial screens for exercises.
 
-
+Visualizations/Graphs - 
+Focus (time spent on each section/Khan academy inspired)
+Skill progress - attempts, percentage correct, status.
+Performance - graph question versus time used. Clicking brings up problem/solution/user_input.
+	    - color coded/split bar for right/wrong submissions and time used per submission.
