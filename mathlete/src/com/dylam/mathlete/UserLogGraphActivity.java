@@ -70,6 +70,8 @@ public class UserLogGraphActivity extends Activity {
    		}
    		
    		int size = mSessionDatetimeIndexList.size();
+   		
+   		
 		// Set up charts.
    		
 		// Draw it.
