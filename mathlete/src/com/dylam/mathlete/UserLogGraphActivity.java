@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ListAdapter;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.dylam.mathlete.UserAnswerContract.UserAnswer;
@@ -46,8 +44,6 @@ public class UserLogGraphActivity extends ListActivity {
 		mDb = mDbHelper.getReadableDatabase();
 		
 		Cursor mCursor =  mDb.rawQuery( "select rowid _id,* from userAnswersLog", null);
-
-		startManagingCursor(mCursor);
 		
 		mSessionDatetimeIndex = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_SESSION_DATETIME);
 		mExerciseIndex = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_EXERCISE);
@@ -59,13 +55,7 @@ public class UserLogGraphActivity extends ListActivity {
 		
 
 		@SuppressWarnings("deprecation")
-		ListAdapter adapter = new SimpleCursorAdapter(this,
-										android.R.layout.two_line_list_item,
-										mCursor,
-										new String[] { UserAnswer._ID,
-														UserAnswer.COLUMN_NAME_PROBLEM,
-														UserAnswer.COLUMN_NAME_SOLUTION },
-										new int[] { android.R.id.text1, android.R.id.text1, android.R.id.text2 });
+		MyCursorAdapter adapter = new MyCursorAdapter(this, mCursor);
 		setListAdapter(adapter);
 		
 	}
@@ -87,24 +77,23 @@ public class UserLogGraphActivity extends ListActivity {
 			TextView summaryView = (TextView) view.findViewById(android.R.id.text2);
 			
 			// Pull data.
-			String sessionDate = mCursor.getString(mSessionDatetimeIndex);
-			String exercise= mCursor.getString(mExerciseIndex);
-			String problem = mCursor.getString(mProblemIndex);
-			String startDate = mCursor.getString(mProblemStartDatetimeIndex);
-			String solution = mCursor.getString(mSolutionIndex);
-			String submissionDate = mCursor.getString(mSubmissionStartDatetimeIndex);
-			String correct = mCursor.getString(mCorrectIndex);
+			String sessionDate = cursor.getString(mSessionDatetimeIndex);
+			String exercise= cursor.getString(mExerciseIndex);
+			String problem = cursor.getString(mProblemIndex);
+			String startDate = cursor.getString(mProblemStartDatetimeIndex);
+			String solution = cursor.getString(mSolutionIndex);
+			String submissionDate = cursor.getString(mSubmissionStartDatetimeIndex);
+			String correct = cursor.getString(mCorrectIndex);
 			
-			titleView.setText(startDate + ":" + problem + " Solution: " + solution);
-			summaryView.setText("Submission time: " + submissionDate + " Your answer was: " + correct);
+			
+			titleView.setText("Session StartDate:" + sessionDate + "\nExercise:" + exercise + "\nProblem:" + problem);  
+			summaryView.setText("\nStart time:" + startDate + "\nSolution:" + solution + "\nSubmission time:" + submissionDate +  "\nCorrect:" + correct);
 		}
 
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			return mInflater.inflate(android.R.layout.two_line_list_item, null);
-
 		}
-		
 	}
 	
 }

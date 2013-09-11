@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -94,8 +95,8 @@ abstract public class BaseExerciseFragment extends Fragment{
 		// Pop up the input keyboard
 		// TODO: add a listener to switch focus and display
 		// keyboard after focus has shifted and returned?
-		//mUserInput.requestFocus();
-		//getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		mUserInput.requestFocus();
+		Config.context.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 		mVibrator = (Vibrator)Config.context.getSystemService(Context.VIBRATOR_SERVICE);
 		
@@ -195,7 +196,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 	// Takes time in seconds, but the CountDownTimer class uses millis
 	// as units, so we need to convert seconds into milliseconds (x 1000)
 	public void startCountdown(int timeInSecs) {
-		int timeInMillis = timeInSecs * 1000;   
+		final int timeInMillis = timeInSecs * 1000;   
 		
 		mCountdownBar.setProgress(timeInMillis);
 		
@@ -207,12 +208,17 @@ abstract public class BaseExerciseFragment extends Fragment{
 				if (mVibrator.hasVibrator()) {
 					mVibrator.vibrate(100);
 				}
+				Toast.makeText(Config.context, "Time's up!", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onTick(long millisUntilFinished) {
 				timeRemainingInSecs =(int) (millisUntilFinished/1000);
 				mCountdownBar.setProgress((int) millisUntilFinished);
+				if (mVibrator.hasVibrator() && millisUntilFinished <= timeInMillis / 3) {
+					mVibrator.vibrate(100);
+				}
+				
 			}
 		}.start();
 	}

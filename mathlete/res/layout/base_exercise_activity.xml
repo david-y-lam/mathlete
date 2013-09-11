@@ -9,14 +9,14 @@
     <WebView
         android:id="@+id/webView1"
         android:layout_width="match_parent"
-        android:layout_height="96dp" />
+        android:layout_height="70dp" />
 
     <ProgressBar
         android:id="@+id/countdownBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         android:progressDrawable="@drawable/countdown_bar"
     />
 
@@ -24,12 +24,9 @@
         android:id="@+id/user_answer_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         android:ems="10"
-        android:inputType="number" >
-
-        <requestFocus />
-    </EditText>
+        android:inputType="number" />
 
     <Button
         android:id="@+id/button1"
