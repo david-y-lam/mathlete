@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
-import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -102,10 +101,10 @@ abstract public class BaseExerciseFragment extends Fragment{
 		
 		// Database elements
 		mDb = Config.dbHelper.getWritableDatabase();
-		sessionStartDatetime = new Time();
+		sessionStartDatetime = new Time(Time.getCurrentTimezone());
 		sessionStartDatetime.setToNow();
-		submissionDatetime = new Time();
-		problemStartDatetime = new Time();
+		submissionDatetime = new Time(Time.getCurrentTimezone());
+		problemStartDatetime = new Time(Time.getCurrentTimezone());
 		
 		//Restore old state if applicable
 		if (savedInstanceState != null) {
@@ -157,9 +156,22 @@ abstract public class BaseExerciseFragment extends Fragment{
 		if(input.length() == 0) {
 			return;
 		}
-		
+
 		submissionDatetime.setToNow();
 
+		// Store the values. Note that we split this operation into two parts
+		// because "result" and "problemStartDatetime" are not available
+		// and possible overwritten respectively.
+		// TODO: Use a loader/content provider
+		ContentValues values = new ContentValues();
+		values.put(UserAnswer.COLUMN_NAME_SESSION_DATETIME, sessionStartDatetime.format3339(false));
+		//values.put(UserAnswer.COLUMN_NAME_LEVEL, null);
+		values.put(UserAnswer.COLUMN_NAME_EXERCISE, title);
+		values.put(UserAnswer.COLUMN_NAME_PROBLEM, problem);
+		values.put(UserAnswer.COLUMN_NAME_SOLUTION,solution);
+		values.put(UserAnswer.COLUMN_NAME_PROBLEM_START_DATETIME, problemStartDatetime.format3339(false));
+		values.put(UserAnswer.COLUMN_NAME_SUBMISSION_START_DATETIME, submissionDatetime.format3339(false));
+		
 		// Check answer.
 		if (checkAnswer(input)) {
 			if (mTimer != null) {
@@ -175,18 +187,9 @@ abstract public class BaseExerciseFragment extends Fragment{
 		}
 		
 		mUserInput.setText("");
-		
-		// Insert into Database
-		ContentValues values = new ContentValues();
-		values.put(UserAnswer.COLUMN_NAME_SESSION_DATETIME, sessionStartDatetime.toString());
-		//values.put(UserAnswer.COLUMN_NAME_LEVEL, null);
-		values.put(UserAnswer.COLUMN_NAME_EXERCISE, title);
-		values.put(UserAnswer.COLUMN_NAME_PROBLEM, problem);
-		values.put(UserAnswer.COLUMN_NAME_SOLUTION,solution);
-		values.put(UserAnswer.COLUMN_NAME_PROBLEM_START_DATETIME, problemStartDatetime.toString());
-		values.put(UserAnswer.COLUMN_NAME_SUBMISSION_START_DATETIME, submissionDatetime.toString());
+
+
 		values.put(UserAnswer.COLUMN_NAME_CORRECT, result);
-		
 		long rowId = mDb.insert(UserAnswer.TABLE_NAME, null, values);
 		
 		// Display results.
