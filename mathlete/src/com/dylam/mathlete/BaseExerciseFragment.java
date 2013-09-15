@@ -188,7 +188,6 @@ abstract public class BaseExerciseFragment extends Fragment{
 		
 		mUserInput.setText("");
 
-
 		values.put(UserAnswer.COLUMN_NAME_CORRECT, result);
 		long rowId = mDb.insert(UserAnswer.TABLE_NAME, null, values);
 		

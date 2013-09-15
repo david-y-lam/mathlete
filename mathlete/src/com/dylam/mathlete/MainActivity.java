@@ -65,6 +65,9 @@ public class MainActivity extends FragmentActivity {
 				startActivity(new Intent(this, SettingsActivity.class));
 				return true;
 			case R.id.action_log:
+				startActivity(new Intent(this, UserLogActivity.class));
+				return true;
+			case R.id.action_log_graph:
 				startActivity(new Intent(this, UserLogGraphActivity.class));
 				return true;
 			default:
