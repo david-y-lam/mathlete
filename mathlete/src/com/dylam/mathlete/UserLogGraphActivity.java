@@ -1,15 +1,20 @@
 package com.dylam.mathlete;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.Pair;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.TextView;
 
+import com.androidplot.LineRegion;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
@@ -42,6 +47,8 @@ public class UserLogGraphActivity extends Activity {
 	
 	public XYPlot mPlot;
 	public XYSeries mTimeElapsedSeries;
+    private Pair<Integer, XYSeries> selection;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +107,79 @@ public class UserLogGraphActivity extends Activity {
 		
 		mTimeElapsedSeries = new SimpleXYSeries(mTimeElapsedList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Time");
 		mPlot.addSeries(mTimeElapsedSeries, new MyBarFormatter(Color.BLUE, Color.BLACK));
+
+		
+        mPlot.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    onPlotClicked(new PointF(motionEvent.getX(), motionEvent.getY()));
+                }
+                return true;
+            }
+        });
 	}
+	
+    private void onPlotClicked(PointF point) {
+
+        // make sure the point lies within the graph area.  we use gridrect
+        // because it accounts for margins and padding as well. 
+        if (mPlot.getGraphWidget().getGridRect().contains(point.x, point.y)) {
+            Number x = mPlot.getXVal(point);
+            Number y = mPlot.getYVal(point);
+
+
+            selection = null;
+            double xDistance = 0;
+            double yDistance = 0;
+
+            // find the closest value to the selection:
+            for (XYSeries series : mPlot.getSeriesSet()) {
+                for (int i = 0; i < series.size(); i++) {
+                    Number thisX = series.getX(i);
+                    Number thisY = series.getY(i);
+                    if (thisX != null && thisY != null) {
+                        double thisXDistance =
+                                LineRegion.measure(x, thisX).doubleValue();
+                        double thisYDistance =
+                                LineRegion.measure(y, thisY).doubleValue();
+                        if (selection == null) {
+                            selection = new Pair<Integer, XYSeries>(i, series);
+                            xDistance = thisXDistance;
+                            yDistance = thisYDistance;
+                        } else if (thisXDistance < xDistance) {
+                            selection = new Pair<Integer, XYSeries>(i, series);
+                            xDistance = thisXDistance;
+                            yDistance = thisYDistance;
+                        } else if (thisXDistance == xDistance &&
+                                thisYDistance < yDistance &&
+                                thisY.doubleValue() >= y.doubleValue()) {
+                            selection = new Pair<Integer, XYSeries>(i, series);
+                            xDistance = thisXDistance;
+                            yDistance = thisYDistance;
+                        }
+                    }
+                }
+            }
+            
+            // Update the textviews with the relevant info.
+            ((TextView)findViewById(R.id.session_date_tv)).setText("Session Datetime:" + mSessionDatetimeIndexList.get(selection.first));
+            ((TextView)findViewById(R.id.exercise_tv)).setText("Exercise:" + mExerciseIndexList.get(selection.first));
+            ((TextView)findViewById(R.id.problem_tv)).setText("Problem:" + mProblemIndexList.get(selection.first));
+            ((TextView)findViewById(R.id.solution_tv)).setText("Solution:" + mSolutionIndexList.get(selection.first));
+            ((TextView)findViewById(R.id.problem_start_datetime_tv)).setText("Problem Start datetime:" + mProblemStartDatetimeIndexList.get(selection.first));
+            ((TextView)findViewById(R.id.submission_start_datetime_tv)).setText("Submission datetime:" + mSubmissionStartDatetimeIndexList.get(selection.first));
+            ((TextView)findViewById(R.id.correct_tv)).setText("Result:" + mCorrectIndexList.get(selection.first));
+            
+            
+        } else {
+            // if the press was outside the graph area, deselect:
+            selection = null;
+        }
+        
+
+        mPlot.redraw();
+    }
 	
     class MyBarFormatter extends BarFormatter {
         public MyBarFormatter(int fillColor, int borderColor) {

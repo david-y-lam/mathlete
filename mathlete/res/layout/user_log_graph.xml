@@ -3,12 +3,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/user_log_graph"
+        android:layout_width="fill_parent"
+        android:layout_height="337dp" />
+
+    <LinearLayout
+        android:id="@+id/problem_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+	    <TextView
+	        android:id="@+id/session_date_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="TextView" />
+	
+	    <TextView
+	        android:id="@+id/exercise_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="TextView" />
+	
+	    <TextView
+	        android:id="@+id/problem_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="TextView" />
+	
+	    <TextView
+	        android:id="@+id/solution_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="TextView" />
+	    
+	    <TextView
+	        android:id="@+id/problem_start_datetime_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="TextView" />
+	    
+	   	<TextView
+	        android:id="@+id/submission_start_datetime_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="TextView" />	        
+	    
+	   	<TextView
+	        android:id="@+id/correct_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="TextView" />
+    </LinearLayout>
+
+
     
- <com.androidplot.xy.XYPlot
-            android:id="@+id/user_log_graph"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            androidPlot.title="User Log"
-            androidPlot.domainLabel="Question"
-            androidPlot.rangeLabel="Time taken (seconds)" />
 </LinearLayout>
