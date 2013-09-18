@@ -48,6 +48,8 @@ public class UserLogGraphActivity extends Activity {
 	public XYPlot mPlot;
 	public XYSeries mTimeElapsedSeries;
     private Pair<Integer, XYSeries> selection;
+    
+    public MyBarFormatter mDefaultFormatter, mSelectedFormatter;
 
 	
 	@Override
@@ -100,13 +102,15 @@ public class UserLogGraphActivity extends Activity {
 		} 
 		
 		// Plot it.
+		mDefaultFormatter = new MyBarFormatter(Color.BLACK, Color.BLUE);
+		mSelectedFormatter = new MyBarFormatter(Color.BLACK, Color.GREEN);
 		mPlot = (XYPlot)findViewById(R.id.user_log_graph);
 		mPlot.setTicksPerRangeLabel(3);
 		mPlot.setRangeLowerBoundary(0, BoundaryMode.FIXED);
 		mPlot.setTicksPerRangeLabel(2);
 		
 		mTimeElapsedSeries = new SimpleXYSeries(mTimeElapsedList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Time");
-		mPlot.addSeries(mTimeElapsedSeries, new MyBarFormatter(Color.BLUE, Color.BLACK));
+		mPlot.addSeries(mTimeElapsedSeries, mDefaultFormatter);
 
 		
         mPlot.setOnTouchListener(new View.OnTouchListener() {
@@ -177,7 +181,6 @@ public class UserLogGraphActivity extends Activity {
             selection = null;
         }
         
-
         mPlot.redraw();
     }
 	
@@ -213,7 +216,13 @@ public class UserLogGraphActivity extends Activity {
         @Override
         // TODO: figure out why using @Override screws up the Maven builds
         protected MyBarFormatter getFormatter(int index, XYSeries series) { 
-        	return getFormatter(series);
+        	if (selection != null && 
+        		selection.second == series && 
+        		selection.first == index) {
+        		return mSelectedFormatter;
+        	} else {
+        		return getFormatter(series);
+        	}
         }
     }
 }
