@@ -171,6 +171,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 		values.put(UserAnswer.COLUMN_NAME_SOLUTION,solution);
 		values.put(UserAnswer.COLUMN_NAME_PROBLEM_START_DATETIME, problemStartDatetime.format3339(false));
 		values.put(UserAnswer.COLUMN_NAME_SUBMISSION_START_DATETIME, submissionDatetime.format3339(false));
+		values.put(UserAnswer.COLUMN_NAME_USER_ANSWER, input);
 		
 		// Check answer.
 		if (checkAnswer(input)) {

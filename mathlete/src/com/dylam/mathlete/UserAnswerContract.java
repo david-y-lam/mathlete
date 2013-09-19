@@ -13,6 +13,7 @@ public final class UserAnswerContract {
         public static final String COLUMN_NAME_EXERCISE = "exercise";
         public static final String COLUMN_NAME_PROBLEM = "problem";
         public static final String COLUMN_NAME_SOLUTION = "solution";
+        public static final String COLUMN_NAME_USER_ANSWER = "userAnswer";
         public static final String COLUMN_NAME_PROBLEM_START_DATETIME= "startTime";
         public static final String COLUMN_NAME_SUBMISSION_START_DATETIME = "submissioStartDateTime";
         public static final String COLUMN_NAME_CORRECT = "isCorrect";

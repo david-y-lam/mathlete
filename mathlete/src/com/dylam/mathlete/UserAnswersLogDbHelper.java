@@ -8,7 +8,7 @@ import com.dylam.mathlete.UserAnswerContract.UserAnswer;
 
 public class UserAnswersLogDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "UserAnswers.db";
     private static final String DB_CREATE = 
 			"create table " + UserAnswer.TABLE_NAME + " (" +
@@ -18,6 +18,7 @@ public class UserAnswersLogDbHelper extends SQLiteOpenHelper {
 			UserAnswer.COLUMN_NAME_EXERCISE + " text," +
 			UserAnswer.COLUMN_NAME_PROBLEM + " text," +
 			UserAnswer.COLUMN_NAME_SOLUTION + " text," +
+			UserAnswer.COLUMN_NAME_USER_ANSWER + " text," +
 			UserAnswer.COLUMN_NAME_PROBLEM_START_DATETIME + " text," +
 			UserAnswer.COLUMN_NAME_SUBMISSION_START_DATETIME + " text," + 
 			UserAnswer.COLUMN_NAME_CORRECT + " boolean );";

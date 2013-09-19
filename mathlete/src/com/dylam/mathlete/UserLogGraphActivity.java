@@ -29,6 +29,7 @@ public class UserLogGraphActivity extends Activity {
 		mExerciseIndex, 
 		mProblemIndex, 
 		mSolutionIndex, 
+		mUserAnswerIndex,
 		mProblemStartDatetimeIndex, 
 		mSubmissionStartDatetimeIndex, 
 		mCorrectIndex; 
@@ -38,6 +39,7 @@ public class UserLogGraphActivity extends Activity {
 		mProblemIndexList,
 		mSolutionIndexList,
 		mProblemStartDatetimeIndexList,
+		mUserAnswerList,
 		mSubmissionStartDatetimeIndexList,
 		mCorrectIndexList;
 	public ArrayList<Float> mTimeElapsedList;
@@ -72,6 +74,7 @@ public class UserLogGraphActivity extends Activity {
 		mExerciseIndex = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_EXERCISE);
 		mProblemIndex  = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_PROBLEM);
 		mSolutionIndex = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_SOLUTION);
+		mUserAnswerIndex = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_USER_ANSWER);
 		mProblemStartDatetimeIndex = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_PROBLEM_START_DATETIME);
 		mSubmissionStartDatetimeIndex = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_SUBMISSION_START_DATETIME);
 		mCorrectIndex = mCursor.getColumnIndex(UserAnswer.COLUMN_NAME_CORRECT);
@@ -81,6 +84,7 @@ public class UserLogGraphActivity extends Activity {
 		mProblemIndexList = new ArrayList<String>();
 		mSolutionIndexList = new ArrayList<String>();
 		mProblemStartDatetimeIndexList = new ArrayList<String>();
+		mUserAnswerList = new ArrayList<String>();
 		mSubmissionStartDatetimeIndexList = new ArrayList<String>();
 		mCorrectIndexList = new ArrayList<String>();
 		mTimeElapsedList = new ArrayList<Float>();
@@ -92,6 +96,7 @@ public class UserLogGraphActivity extends Activity {
 			mProblemIndexList.add(mCursor.getString(mProblemIndex));
 			mSolutionIndexList.add(mCursor.getString(mSolutionIndex));
 			mProblemStartDatetimeIndexList.add(mCursor.getString(mProblemStartDatetimeIndex));
+			mUserAnswerList.add(mCursor.getString(mUserAnswerIndex));
 			mSubmissionStartDatetimeIndexList.add(mCursor.getString(mSubmissionStartDatetimeIndex));
 			mCorrectIndexList.add(mCursor.getString(mCorrectIndex));
 			Time start = new Time();
@@ -166,19 +171,21 @@ public class UserLogGraphActivity extends Activity {
                 }
             }
             
-            // Update the textviews with the relevant info.
-            ((TextView)findViewById(R.id.session_date_tv)).setText("Session Datetime:" + mSessionDatetimeIndexList.get(selection.first));
-            ((TextView)findViewById(R.id.exercise_tv)).setText("Exercise:" + mExerciseIndexList.get(selection.first));
-            ((TextView)findViewById(R.id.problem_tv)).setText("Problem:" + mProblemIndexList.get(selection.first));
-            ((TextView)findViewById(R.id.solution_tv)).setText("Solution:" + mSolutionIndexList.get(selection.first));
-            ((TextView)findViewById(R.id.problem_start_datetime_tv)).setText("Problem Start datetime:" + mProblemStartDatetimeIndexList.get(selection.first));
-            ((TextView)findViewById(R.id.submission_start_datetime_tv)).setText("Submission datetime:" + mSubmissionStartDatetimeIndexList.get(selection.first));
-            ((TextView)findViewById(R.id.correct_tv)).setText("Result:" + mCorrectIndexList.get(selection.first));
-            
-            
         } else {
             // if the press was outside the graph area, deselect:
             selection = null;
+        }
+        
+        if (selection != null) {
+        	// Update the textviews with the relevant info.
+        	((TextView)findViewById(R.id.session_date_tv)).setText("Session Datetime:" + mSessionDatetimeIndexList.get(selection.first));
+        	((TextView)findViewById(R.id.exercise_tv)).setText("Exercise:" + mExerciseIndexList.get(selection.first));
+        	((TextView)findViewById(R.id.problem_tv)).setText("Problem:" + mProblemIndexList.get(selection.first));
+        	((TextView)findViewById(R.id.solution_tv)).setText("Solution:" + mSolutionIndexList.get(selection.first));
+        	((TextView)findViewById(R.id.problem_start_datetime_tv)).setText("Problem Start datetime:" + mProblemStartDatetimeIndexList.get(selection.first));
+        	((TextView)findViewById(R.id.user_answer_tv)).setText("User Answer:" + mUserAnswerList.get(selection.first));
+        	((TextView)findViewById(R.id.submission_start_datetime_tv)).setText("Submission datetime:" + mSubmissionStartDatetimeIndexList.get(selection.first));
+        	((TextView)findViewById(R.id.correct_tv)).setText("Result:" + mCorrectIndexList.get(selection.first));
         }
         
         mPlot.redraw();
