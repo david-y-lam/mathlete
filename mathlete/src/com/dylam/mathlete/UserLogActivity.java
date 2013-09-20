@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,12 +78,17 @@ public class UserLogActivity extends ListActivity {
 			TextView summaryView = (TextView) view.findViewById(android.R.id.text2);
 			
 			// Pull data.
-			String sessionDate = cursor.getString(mSessionDatetimeIndex);
+			// TODO: write util method for time.
+			Time t = new Time();
+			t.set(Long.parseLong(cursor.getString(mSessionDatetimeIndex)));
+			String sessionDate = t.format3339(false);
 			String exercise= cursor.getString(mExerciseIndex);
 			String problem = cursor.getString(mProblemIndex);
-			String startDate = cursor.getString(mProblemStartDatetimeIndex);
+			t.set(Long.parseLong(cursor.getString(mProblemStartDatetimeIndex)));
+			String startDate = t.format3339(false);
 			String solution = cursor.getString(mSolutionIndex);
-			String submissionDate = cursor.getString(mSubmissionStartDatetimeIndex);
+			t.set(Long.parseLong(cursor.getString(mSubmissionStartDatetimeIndex)));
+			String submissionDate = t.format3339(false);
 			String correct = cursor.getString(mCorrectIndex);
 			String id = Integer.toString(cursor.getInt(cursor.getColumnIndex("_id")));
 			

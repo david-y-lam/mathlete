@@ -164,13 +164,13 @@ abstract public class BaseExerciseFragment extends Fragment{
 		// and possible overwritten respectively.
 		// TODO: Use a loader/content provider
 		ContentValues values = new ContentValues();
-		values.put(UserAnswer.COLUMN_NAME_SESSION_DATETIME, sessionStartDatetime.format3339(false));
+		values.put(UserAnswer.COLUMN_NAME_SESSION_DATETIME, sessionStartDatetime.toMillis(false));
 		//values.put(UserAnswer.COLUMN_NAME_LEVEL, null);
 		values.put(UserAnswer.COLUMN_NAME_EXERCISE, title);
 		values.put(UserAnswer.COLUMN_NAME_PROBLEM, problem);
 		values.put(UserAnswer.COLUMN_NAME_SOLUTION,solution);
-		values.put(UserAnswer.COLUMN_NAME_PROBLEM_START_DATETIME, problemStartDatetime.format3339(false));
-		values.put(UserAnswer.COLUMN_NAME_SUBMISSION_START_DATETIME, submissionDatetime.format3339(false));
+		values.put(UserAnswer.COLUMN_NAME_PROBLEM_START_DATETIME, problemStartDatetime.toMillis(false));
+		values.put(UserAnswer.COLUMN_NAME_SUBMISSION_START_DATETIME, submissionDatetime.toMillis(false));
 		values.put(UserAnswer.COLUMN_NAME_USER_ANSWER, input);
 		
 		// Check answer.

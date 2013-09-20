@@ -99,11 +99,9 @@ public class UserLogGraphActivity extends Activity {
 			mUserAnswerList.add(mCursor.getString(mUserAnswerIndex));
 			mSubmissionStartDatetimeIndexList.add(mCursor.getString(mSubmissionStartDatetimeIndex));
 			mCorrectIndexList.add(mCursor.getString(mCorrectIndex));
-			Time start = new Time();
-			Time end = new Time();
-			start.parse3339(mProblemStartDatetimeIndexList.get(i));
-			end.parse3339(mSubmissionStartDatetimeIndexList.get(i));
-			mTimeElapsedList.add((float)(end.toMillis(false) - start.toMillis(false)) / 1000);
+			Long start = Long.parseLong(mProblemStartDatetimeIndexList.get(i));
+			Long end = Long.parseLong(mSubmissionStartDatetimeIndexList.get(i));
+			mTimeElapsedList.add((float)(end - start) / 1000);
 		} 
 		
 		// Plot it.
@@ -178,13 +176,19 @@ public class UserLogGraphActivity extends Activity {
         
         if (selection != null) {
         	// Update the textviews with the relevant info.
-        	((TextView)findViewById(R.id.session_date_tv)).setText("Session Datetime:" + mSessionDatetimeIndexList.get(selection.first));
+        	Time sessionStartTime = new Time();
+        	sessionStartTime.set(Long.parseLong(mSessionDatetimeIndexList.get(selection.first)));
+        	((TextView)findViewById(R.id.session_date_tv)).setText("Session Datetime:" + sessionStartTime.format3339(false));
         	((TextView)findViewById(R.id.exercise_tv)).setText("Exercise:" + mExerciseIndexList.get(selection.first));
         	((TextView)findViewById(R.id.problem_tv)).setText("Problem:" + mProblemIndexList.get(selection.first));
         	((TextView)findViewById(R.id.solution_tv)).setText("Solution:" + mSolutionIndexList.get(selection.first));
-        	((TextView)findViewById(R.id.problem_start_datetime_tv)).setText("Problem Start datetime:" + mProblemStartDatetimeIndexList.get(selection.first));
+        	Time problemStartTime = new Time();
+        	problemStartTime.set(Long.parseLong(mProblemStartDatetimeIndexList.get(selection.first)));
+        	((TextView)findViewById(R.id.problem_start_datetime_tv)).setText("Problem Start datetime:" + problemStartTime.format3339(false)); 
         	((TextView)findViewById(R.id.user_answer_tv)).setText("User Answer:" + mUserAnswerList.get(selection.first));
-        	((TextView)findViewById(R.id.submission_start_datetime_tv)).setText("Submission datetime:" + mSubmissionStartDatetimeIndexList.get(selection.first));
+        	Time submissionStartTime = new Time();
+        	submissionStartTime.set(Long.parseLong(mSubmissionStartDatetimeIndexList.get(selection.first)));
+        	((TextView)findViewById(R.id.submission_start_datetime_tv)).setText("Submission datetime:" + submissionStartTime.format3339(false));
         	((TextView)findViewById(R.id.correct_tv)).setText("Result:" + mCorrectIndexList.get(selection.first));
         }
         
