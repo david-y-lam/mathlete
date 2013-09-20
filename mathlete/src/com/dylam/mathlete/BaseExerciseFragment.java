@@ -2,6 +2,7 @@ package com.dylam.mathlete;
 
 import java.util.Random;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
@@ -48,10 +49,23 @@ abstract public class BaseExerciseFragment extends Fragment{
 	// Database elements
 	public SQLiteDatabase mDb;
 	public Time sessionStartDatetime, problemStartDatetime, submissionDatetime;
-	
+
+    public Activity mActivity;
+
 	public String TAG = "BaseExerciseFragment";
-	
-	@Override
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mActivity = getActivity();
+        sessionStartDatetime = new Time(Time.getCurrentTimezone());
+        sessionStartDatetime.setToNow();
+        submissionDatetime = new Time(Time.getCurrentTimezone());
+        problemStartDatetime = new Time(Time.getCurrentTimezone());
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.base_exercise_activity, container, false);
@@ -95,16 +109,11 @@ abstract public class BaseExerciseFragment extends Fragment{
 		// TODO: add a listener to switch focus and display
 		// keyboard after focus has shifted and returned?
 		mUserInput.requestFocus();
-		Config.context.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-		mVibrator = (Vibrator)Config.context.getSystemService(Context.VIBRATOR_SERVICE);
+		mVibrator = (Vibrator)mActivity.getSystemService(Context.VIBRATOR_SERVICE);
 		
-		// Database elements
-		mDb = Config.dbHelper.getWritableDatabase();
-		sessionStartDatetime = new Time(Time.getCurrentTimezone());
-		sessionStartDatetime.setToNow();
-		submissionDatetime = new Time(Time.getCurrentTimezone());
-		problemStartDatetime = new Time(Time.getCurrentTimezone());
+
 		
 		//Restore old state if applicable
 		if (savedInstanceState != null) {
@@ -121,22 +130,24 @@ abstract public class BaseExerciseFragment extends Fragment{
 		return v;
 	}
 
+    @Override
+    public void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+
+        // Set up database
+        mDb = new UserAnswersLogDbHelper(mActivity).getWritableDatabase();
+
+        startCountdown(timeRemainingInSecs);
+    }
 	@Override
 	public void onPause() {
 		if (mTimer != null) {
 			mTimer.cancel();
 		}
 
+        mDb.close();
 		super.onPause();
-	}
-
-	
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		
-		startCountdown(timeRemainingInSecs);
 	}
 
 	@Override
@@ -211,7 +222,7 @@ abstract public class BaseExerciseFragment extends Fragment{
 				if (mVibrator.hasVibrator()) {
 					mVibrator.vibrate(100);
 				}
-				Toast.makeText(Config.context, "Time's up!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mActivity, "Time's up!", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override

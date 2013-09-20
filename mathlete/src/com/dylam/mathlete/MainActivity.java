@@ -19,12 +19,9 @@ public class MainActivity extends FragmentActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate()");
+		Log.d(TAG, "MainActivity: onCreate()");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
-
-		Config.context = this;
-		Config.dbHelper = new UserAnswersLogDbHelper(Config.context);
 
 		mFragManager = getFragmentManager();
 		

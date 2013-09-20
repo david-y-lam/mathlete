@@ -8,8 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.text.format.Time;
+import android.util.Log;
 import android.util.Pair;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import com.androidplot.xy.XYSeries;
 import com.dylam.mathlete.UserAnswerContract.UserAnswer;
 
 public class UserLogGraphActivity extends Activity {
+	public static final String TAG = "user log graph";
 	public int mSessionDatetimeIndex, 
 		mExerciseIndex, 
 		mProblemIndex, 
@@ -52,16 +56,17 @@ public class UserLogGraphActivity extends Activity {
     private Pair<Integer, XYSeries> selection;
     
     public MyBarFormatter mDefaultFormatter, mSelectedFormatter;
-
+    
+    private GestureDetectorCompat mDetector;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+        // Log.d(TAG, "In UserLogGraphActivity onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_log_graph);
-		
+
 		// Read in the data into Arrays.
-		mDb = Config.dbHelper.getReadableDatabase();
+		mDb = new UserAnswersLogDbHelper(this).getReadableDatabase();
 		mCursor = mDb.query(UserAnswer.TABLE_NAME, 
 				null, 
 				null,
@@ -102,7 +107,8 @@ public class UserLogGraphActivity extends Activity {
 			Long start = Long.parseLong(mProblemStartDatetimeIndexList.get(i));
 			Long end = Long.parseLong(mSubmissionStartDatetimeIndexList.get(i));
 			mTimeElapsedList.add((float)(end - start) / 1000);
-		} 
+		}
+        mDb.close();
 		
 		// Plot it.
 		mDefaultFormatter = new MyBarFormatter(Color.BLACK, Color.BLUE);
@@ -115,7 +121,6 @@ public class UserLogGraphActivity extends Activity {
 		mTimeElapsedSeries = new SimpleXYSeries(mTimeElapsedList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Time");
 		mPlot.addSeries(mTimeElapsedSeries, mDefaultFormatter);
 
-		
         mPlot.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -125,9 +130,20 @@ public class UserLogGraphActivity extends Activity {
                 return true;
             }
         });
+        
+        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	}
 	
-    private void onPlotClicked(PointF point) {
+	
+    @Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+    	mDetector.onTouchEvent(event);
+    	return super.onTouchEvent(event);
+	}
+
+
+	private void onPlotClicked(PointF point) {
 
         // make sure the point lies within the graph area.  we use gridrect
         // because it accounts for margins and padding as well. 
@@ -194,7 +210,7 @@ public class UserLogGraphActivity extends Activity {
         
         mPlot.redraw();
     }
-	
+
     class MyBarFormatter extends BarFormatter {
         public MyBarFormatter(int fillColor, int borderColor) {
             super(fillColor, borderColor);
@@ -235,5 +251,19 @@ public class UserLogGraphActivity extends Activity {
         		return getFormatter(series);
         	}
         }
+    }
+    
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onScroll(MotionEvent e1, MotionEvent e2,
+				float distanceX, float distanceY) {
+			Log.d(TAG, "in onscroll");
+			Log.d(TAG, e1.toString());
+			Log.d(TAG, e2.toString());
+			// TODO Auto-generated method stub
+			return super.onScroll(e1, e2, distanceX, distanceY);
+		}
+    	
     }
 }
