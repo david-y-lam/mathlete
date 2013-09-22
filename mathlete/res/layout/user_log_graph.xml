@@ -62,7 +62,4 @@
 	        android:layout_height="wrap_content"
 	        android:text="TextView" />
     </LinearLayout>
-
-
-    
 </LinearLayout>

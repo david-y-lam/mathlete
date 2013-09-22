@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.TextView;
 
@@ -54,11 +55,13 @@ public class UserLogGraphActivity extends Activity {
 	public XYPlot mPlot;
 	public XYSeries mTimeElapsedSeries;
     private Pair<Integer, XYSeries> selection;
-    
+    public float minX, maxX;
+
     public MyBarFormatter mDefaultFormatter, mSelectedFormatter;
     
-    private GestureDetectorCompat mDetector;
-	
+    private GestureDetectorCompat mGestureDetector;
+    private ScaleGestureDetector mScaleDetector;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         // Log.d(TAG, "In UserLogGraphActivity onCreate");
@@ -117,32 +120,33 @@ public class UserLogGraphActivity extends Activity {
 		mPlot.setTicksPerRangeLabel(3);
 		mPlot.setRangeLowerBoundary(0, BoundaryMode.FIXED);
 		mPlot.setTicksPerRangeLabel(2);
-		
+
 		mTimeElapsedSeries = new SimpleXYSeries(mTimeElapsedList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Time");
 		mPlot.addSeries(mTimeElapsedSeries, mDefaultFormatter);
 
         mPlot.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    onPlotClicked(new PointF(motionEvent.getX(), motionEvent.getY()));
+                boolean handled = false;
+                // NOTE: Does onTouchEvent has a bug? It always returns true.
+                mScaleDetector.onTouchEvent(motionEvent);
+                if (!mScaleDetector.isInProgress()) {
+                    handled = mGestureDetector.onTouchEvent(motionEvent);
+                } else {
+                    handled = true;
                 }
-                return true;
+
+                return handled;
             }
         });
-        
-        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
+        minX = 0;
+        maxX = mTimeElapsedSeries.size();
+
+        mGestureDetector = new GestureDetectorCompat(this, mGestureListener);
+        mScaleDetector = new ScaleGestureDetector(this, mScaleGestureListener);
 	}
 	
-	
-    @Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-    	mDetector.onTouchEvent(event);
-    	return super.onTouchEvent(event);
-	}
-
-
 	private void onPlotClicked(PointF point) {
 
         // make sure the point lies within the graph area.  we use gridrect
@@ -226,7 +230,7 @@ public class UserLogGraphActivity extends Activity {
             return new MyBarRenderer(plot);
         }
     }
-	
+
     class MyBarRenderer extends BarRenderer<MyBarFormatter> {
 
         public MyBarRenderer(XYPlot plot) {
@@ -253,17 +257,90 @@ public class UserLogGraphActivity extends Activity {
         }
     }
     
-    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+    private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
 
-		@Override
+        @Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
 				float distanceX, float distanceY) {
-			Log.d(TAG, "in onscroll");
-			Log.d(TAG, e1.toString());
-			Log.d(TAG, e2.toString());
-			// TODO Auto-generated method stub
-			return super.onScroll(e1, e2, distanceX, distanceY);
+			Log.d(TAG, "User scrolling graph.");
+            float domainSpan = maxX - minX;
+            float step = domainSpan / mPlot.getWidth();
+            float offset = distanceX / step;
+            minX += offset;
+            maxX += offset;
+
+            float leftBoundary = mTimeElapsedSeries.getX(0).floatValue();
+            float rightBoundary = mTimeElapsedSeries.getX(mTimeElapsedSeries.size()-1).floatValue();
+            // adjust domain boundaries of our plot and check that
+            // user hasn't fallen off range.
+            if (minX < leftBoundary) {
+                minX = leftBoundary;
+                maxX = leftBoundary + domainSpan;
+            } else if (maxX > rightBoundary) {
+                maxX = rightBoundary;
+                minX = rightBoundary - domainSpan;
+            }
+
+            mPlot.setDomainBoundaries(minX, maxX, BoundaryMode.FIXED);
+            mPlot.redraw();
+			return true;
 		}
-    	
-    }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.d(TAG, "in onSingleTapUp");
+            onPlotClicked(new PointF(e.getX(), e.getY()));
+            return true;
+        }
+    };
+
+    private final ScaleGestureDetector.OnScaleGestureListener mScaleGestureListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            Log.d(TAG, "User zooming");
+            float scale = detector.getScaleFactor();
+            Log.d(TAG, "Scale:" + Float.toString(scale));
+            float domainSpan = maxX - minX;
+            float domainMidPoint = maxX - domainSpan / 2.0f;
+            float offset = domainSpan * scale / 2.0f;
+
+            minX = domainMidPoint - offset;
+            maxX = domainMidPoint + offset;
+
+            minX = Math.min(minX, mTimeElapsedSeries.getX(mTimeElapsedSeries.size()-3).floatValue());
+            maxX = Math.max(maxX, mTimeElapsedSeries.getX(1).floatValue());
+
+            // Check within bounds
+            float leftBoundary = mTimeElapsedSeries.getX(0).floatValue();
+            float rightBoundary = mTimeElapsedSeries.getX(mTimeElapsedSeries.size()-1).floatValue();
+            // adjust domain boundaries of our plot and check that
+            // user hasn't fallen off range.
+            if (minX < leftBoundary) {
+                minX = leftBoundary;
+                maxX = leftBoundary + domainSpan;
+            } else if (maxX > rightBoundary) {
+                maxX = rightBoundary;
+                minX = rightBoundary - domainSpan;
+            }
+
+            mPlot.setDomainBoundaries(minX,maxX,BoundaryMode.FIXED);
+            mPlot.redraw();
+            return true;
+        }
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            Log.d(TAG, "User started zooming");
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            Log.d(TAG, "User stopped zooming");
+        }
+    };
 }
