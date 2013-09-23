@@ -1,10 +1,9 @@
 package com.dylam.mathlete;
 
-import java.util.Random;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
+
+import java.util.Random;
 
 public class Chapter1_2_ThreeDigitAddition extends BaseExerciseFragment {
 	// variables

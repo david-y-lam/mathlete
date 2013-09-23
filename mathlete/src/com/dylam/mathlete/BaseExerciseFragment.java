@@ -1,7 +1,5 @@
 package com.dylam.mathlete;
 
-import java.util.Random;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +25,8 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.dylam.mathlete.UserAnswerContract.UserAnswer;
+
+import java.util.Random;
 
 
 abstract public class BaseExerciseFragment extends Fragment{

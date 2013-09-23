@@ -1,7 +1,5 @@
 package com.dylam.mathlete;
 
-import com.dylam.mathlete.UserAnswerContract.UserAnswer;
-
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;

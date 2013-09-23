@@ -1,9 +1,9 @@
 package com.dylam.mathlete;
 
-import java.util.Random;
-
 import android.os.Bundle;
 import android.webkit.WebView;
+
+import java.util.Random;
 
 public class Chapter1_4_ThreeDigitSubtraction extends BaseExerciseFragment {
 	// variables

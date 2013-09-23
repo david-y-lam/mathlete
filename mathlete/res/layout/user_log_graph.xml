@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/user_log_graph"
-        android:layout_width="fill_parent"
-        android:layout_height="337dp" />
-
     <LinearLayout
         android:id="@+id/problem_info"
         android:layout_width="wrap_content"

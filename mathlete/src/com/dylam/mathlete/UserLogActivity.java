@@ -1,7 +1,5 @@
 package com.dylam.mathlete;
 
-import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +13,8 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.dylam.mathlete.UserAnswerContract.UserAnswer;
+
+import java.util.ArrayList;
 
 public class UserLogActivity extends ListActivity {
 	public SQLiteDatabase mDb;

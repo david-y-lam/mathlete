@@ -1,9 +1,5 @@
 package com.dylam.mathlete;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
