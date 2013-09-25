@@ -3,13 +3,14 @@ package com.dylam.mathlete;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,6 @@ public class UserLogGraphActivity extends Activity {
 	    // Log.d(TAG, "In UserLogGraphActivity onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_log_graph);
-/*
 
 		// Read in the data into Arrays.
 		mDb = new UserAnswersLogDbHelper(this).getReadableDatabase();
@@ -89,24 +89,26 @@ public class UserLogGraphActivity extends Activity {
 			mTimeElapsedList.add((float)(end - start) / 1000);
 		}
 		mDb.close();
-*/
+
         // init example series data
-        GraphViewData[] gv = new GraphViewData[] {
-                new GraphViewData(1, 2.0d)
-                , new GraphViewData(2, 1.5d)
-                , new GraphViewData(2.5, 3.0d) // another frequency
-                , new GraphViewData(3, 2.5d)
-                , new GraphViewData(4, 1.0d)
-                , new GraphViewData(5, 3.0d)
-        };
+        GraphViewData[] gv = new GraphViewData[mCursor.getCount()];
+
+        for (int i = 0; i < mCursor.getCount(); i++) {
+            gv[i] = new GraphViewData(i, mTimeElapsedList.get(i));
+        }
 
         GraphViewSeries exampleSeries = new GraphViewSeries(gv);
 
-        GraphView graphView = new LineGraphView(
+        GraphView graphView = new BarGraphView(
                 this // context
                 , "GraphViewDemo" // heading
         );
         graphView.addSeries(exampleSeries); // data
+        graphView.setViewPort(0, mCursor.getColumnCount() / 2);
+        graphView.setScalable(true);
+        graphView.setScrollable(true);
+        graphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
+        graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.graph);
         layout.addView(graphView);
